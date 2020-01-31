@@ -84,7 +84,26 @@ function promptUser() {
                 removeEmployee(response);
             })
         } else if (response.menu === "Update Employee Role") {
-
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "firstName",
+                    message: "What is the employee's first name?",
+                },
+                {
+                    type: "input",
+                    name: "lastName",
+                    message: "What is the employee's last name?",
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "Select new role.",
+                    choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Accountant", "Analyst", "Legal Team Lead", "Lawyer"]
+                }
+            ]).then(function (response) {
+                updateEmployeeRole(response);
+            })
         }
     });
 }
@@ -142,5 +161,14 @@ function removeEmployee(response) {
     connection.query(`DELETE FROM employees WHERE first_name="${response.firstName}" AND last_name="${response.lastName}"`, function (error, response) {
         if (error) throw error;
         promptUser();
+    });
+}
+
+function updateEmployeeRole(response) {
+    connection.query(`SELECT id FROM roles WHERE title = "${response.role}"`, function (error, r) {
+        connection.query(`UPDATE employees SET role_id="${r[0].id}" WHERE first_name="${response.firstName}" AND last_name="${response.lastName}"`, function (error, response) {
+            if (error) throw error;
+            promptUser();
+        });
     });
 }
