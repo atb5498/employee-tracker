@@ -16,6 +16,7 @@ connection.connect(function (error) {
     promptUser();
 });
 
+// Prompts user and displays menu
 function promptUser() {
     inquirer.prompt([
         {
@@ -67,12 +68,29 @@ function promptUser() {
             ]).then(function (response) {
                 addlEmployee(response);
             })
+        } else if (response.menu === "Remove Employee") {
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "firstName",
+                    message: "What is the employee's first name?",
+                },
+                {
+                    type: "input",
+                    name: "lastName",
+                    message: "What is the employee's last name?",
+                }
+            ]).then(function (response) {
+                removeEmployee(response);
+            })
+        } else if (response.menu === "Update Employee Role") {
+
         }
     });
 }
 
 function viewAllEmployees() {
-    connection.query("SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id;", function (error, response) {
+    connection.query("SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id", function (error, response) {
         if (error) throw error;
         console.table(response);
         promptUser();
@@ -80,7 +98,7 @@ function viewAllEmployees() {
 }
 
 function viewSalesEmployees() {
-    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Sales";`, function (error, response) {
+    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Sales"`, function (error, response) {
         if (error) throw error;
         console.table(response);
         promptUser();
@@ -88,7 +106,7 @@ function viewSalesEmployees() {
 }
 
 function viewEngineeringEmployees() {
-    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Engineering";`, function (error, response) {
+    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Engineering"`, function (error, response) {
         if (error) throw error;
         console.table(response);
         promptUser();
@@ -96,7 +114,7 @@ function viewEngineeringEmployees() {
 }
 
 function viewFinanceEmployees() {
-    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Finance";`, function (error, response) {
+    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Finance"`, function (error, response) {
         if (error) throw error;
         console.table(response);
         promptUser();
@@ -104,7 +122,7 @@ function viewFinanceEmployees() {
 }
 
 function viewLegalEmployees() {
-    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Legal";`, function (error, response) {
+    connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.salary, roles.title, departments.department FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE departments.department = "Legal"`, function (error, response) {
         if (error) throw error;
         console.table(response);
         promptUser();
@@ -115,7 +133,14 @@ function addlEmployee(response) {
     connection.query(`SELECT id FROM roles WHERE title = "${response.role}"`, function (error, r) {
         connection.query(`INSERT INTO employees (first_name, last_name, role_id) VALUES ("${response.firstName}", "${response.lastName}", ${r[0].id})`, function (error, response) {
             if (error) throw error;
-            viewAllEmployees();
+            promptUser();
         });
+    });
+}
+
+function removeEmployee(response) {
+    connection.query(`DELETE FROM employees WHERE first_name="${response.firstName}" AND last_name="${response.lastName}"`, function (error, response) {
+        if (error) throw error;
+        promptUser();
     });
 }
