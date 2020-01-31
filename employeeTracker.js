@@ -46,6 +46,27 @@ function promptUser() {
                     viewLegalEmployees();
                 }
             })
+        } else if (response.menu === "Add Employee") {
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "firstName",
+                    message: "What is the employee's first name?",
+                },
+                {
+                    type: "input",
+                    name: "lastName",
+                    message: "What is the employee's last name?",
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "What is the employee's role?",
+                    choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Accountant", "Analyst", "Legal Team Lead", "Lawyer"]
+                }
+            ]).then(function (response) {
+                addlEmployee(response);
+            })
         }
     });
 }
@@ -87,5 +108,14 @@ function viewLegalEmployees() {
         if (error) throw error;
         console.table(response);
         promptUser();
+    });
+}
+
+function addlEmployee(response) {
+    connection.query(`SELECT id FROM roles WHERE title = "${response.role}"`, function (error, r) {
+        connection.query(`INSERT INTO employees (first_name, last_name, role_id) VALUES ("${response.firstName}", "${response.lastName}", ${r[0].id})`, function (error, response) {
+            if (error) throw error;
+            viewAllEmployees();
+        });
     });
 }
