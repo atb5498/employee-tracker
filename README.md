@@ -13,7 +13,6 @@ SO THAT I can organize and plan my business
 2. Use the arrow keys to select what action you would like to perform and follow the resulting prompt(s)
 3. Select EXIT from the menu to end the program
 
-
 # Built With
 npm: https://www.npmjs.com/
 
