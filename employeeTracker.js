@@ -26,8 +26,11 @@ function promptUser() {
             choices: ["View All Employees", "View Employees By Department", "Add Employee", "Remove Employee", "Update Employee Role", "EXIT"]
         }
     ]).then(function (response) {
+        // Displays all employees
         if (response.menu === "View All Employees") {
             viewAllEmployees();
+
+            // Displays employees by specified department
         } else if (response.menu === "View Employees By Department") {
             inquirer.prompt([
                 {
@@ -47,6 +50,8 @@ function promptUser() {
                     viewLegalEmployees();
                 }
             })
+
+            // Adds new employee to the database
         } else if (response.menu === "Add Employee") {
             inquirer.prompt([
                 {
@@ -68,6 +73,8 @@ function promptUser() {
             ]).then(function (response) {
                 addlEmployee(response);
             })
+
+            // Removes specified employee from the database
         } else if (response.menu === "Remove Employee") {
             inquirer.prompt([
                 {
@@ -83,6 +90,8 @@ function promptUser() {
             ]).then(function (response) {
                 removeEmployee(response);
             })
+
+            // Updates role of specified employee
         } else if (response.menu === "Update Employee Role") {
             inquirer.prompt([
                 {
@@ -104,6 +113,8 @@ function promptUser() {
             ]).then(function (response) {
                 updateEmployeeRole(response);
             })
+        } else {
+            connection.end();
         }
     });
 }
