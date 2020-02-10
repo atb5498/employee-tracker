@@ -1,5 +1,5 @@
 # Employee Tracker
-This application is intended to allow users to track and manage employee data. The database contains the following information: employee's first name, last name, salary, title, and department.
+This command line application is intended to allow users to track and manage employee data. The database contains the following information: employee's first name, last name, salary, title, and department.
 
 # User story
 AS A business owner
